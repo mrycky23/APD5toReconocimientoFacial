@@ -6,6 +6,20 @@ require_once("../models/usuario.models.php");
 //require_once("../models/Accesos.models.php");
 $Usuarios = new Usuarios;
 //$Accesos = new Accesos;
+
+class ImagenController {
+    public function guardarImagen($imageData, $fileName) {
+        $resultado = ImagenModel::guardarImagen($imageData, $fileName);
+        if ($resultado) {
+            return 'Imagen guardada correctamente';
+        } else {
+            return 'Error al guardar la imagen';
+        }
+    }
+}
+
+$imagenController = new ImagenController();
+
 switch ($_GET["op"]) {
         /*TODO: Procedimiento para listar todos los registros */
     case 'todos':

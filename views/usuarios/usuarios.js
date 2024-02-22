@@ -207,7 +207,7 @@ function guardarImagen() {
   if (capturedImage) {
       // Enviar la imagen al servidor
       $.ajax({
-          url: 'guardar_imagen.php',
+          url: 'usuario.controllers.php',
           type: 'post',
           data: { 
               imageData: capturedImage,

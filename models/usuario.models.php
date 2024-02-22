@@ -95,3 +95,22 @@ class Usuarios
         $con->close();
     }
 }
+
+class ImagenModel {
+    public static function guardarImagen($imageData, $fileName) {
+        // Directorio donde se guardarán las imágenes
+        $uploadDirectory = 'uploads/';
+
+        // Decodificar la imagen base64
+        $imageData = str_replace('data:image/png;base64,', '', $imageData);
+        $imageData = str_replace(' ', '+', $imageData);
+        $imageData = base64_decode($imageData);
+
+        // Guardar la imagen en el directorio
+        if(file_put_contents($uploadDirectory . $fileName, $imageData)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
