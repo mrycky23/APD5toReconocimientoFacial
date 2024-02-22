@@ -43,12 +43,6 @@ var GuardarEditar = (e) => {
   for (var pair of DatosFormularioUsuario.entries()) {
     console.log(pair[0] + ", " + pair[1]);
   }
-
-  /**
-   * if(SucursalId >0){editar   accion='ruta para editar'}
-   * else
-   * { accion = ruta para insertar}
-   */
   $.ajax({
     url: accion,
     type: "post",
@@ -169,6 +163,26 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// Función para enviar la imagen capturada al servidor
+function enviarImagenBase64(imageData) {
+  $.ajax({
+      url: 'guardar_imagen.php',
+      type: 'post',
+      data: { imageData: imageData },
+      success: function(response) {
+          console.log(response);
+          // Aquí puedes realizar cualquier otra acción después de guardar la imagen
+      },
+      error: function(xhr, status, error) {
+          console.error('Error al enviar la imagen: ' + error);
+      }
+  });
+}
+
+let capturedImage = null;
+let capturedImageFileName = '';
+
+// Modificar la función btnCapturar para enviar la imagen al servidor
 btnCapturar.addEventListener('click', function () {
   // Capturar imagen y enviarla a la base de datos
   const video = document.getElementById("video2");
@@ -180,6 +194,35 @@ btnCapturar.addEventListener('click', function () {
   context.drawImage(video, 0, 0, canvas.width, canvas.height);
   const imageData = canvas.toDataURL('image/png');
   
-  // Aquí debes enviar imageData a tu servidor para guardarla en la base de datos
-  console.log('Imagen capturada:', imageData);
+  capturedImage = imageData;
+  capturedImageFileName = 'captured_image_'+ Date.now() + '.png';
+  
+  document.getElementById('capturedImagePreview').src = capturedImage;
+  // Enviar la imagen capturada al servidor
+  //console.log('Imagen capturada:', imageData);
+  //enviarImagenBase64(imageData);
 });
+
+function guardarImagen() {
+  if (capturedImage) {
+      // Enviar la imagen al servidor
+      $.ajax({
+          url: 'guardar_imagen.php',
+          type: 'post',
+          data: { 
+              imageData: capturedImage,
+              fileName: capturedImageFileName // Enviar el nombre de archivo al servidor
+          },
+          success: function(response) {
+              console.log(response);
+              // Aquí puedes realizar cualquier otra acción después de guardar la imagen
+              // Por ejemplo, cerrar el modal o actualizar la interfaz de usuario
+          },
+          error: function(xhr, status, error) {
+              console.error('Error al enviar la imagen: ' + error);
+          }
+      });
+  } else {
+      console.error('No se ha capturado ninguna imagen.');
+  }
+}
